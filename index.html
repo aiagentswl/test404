@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 Punks Lab — Whitelist</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+
+<!-- TASKBAR -->
+<div class="taskbar">
+  <button class="taskbar-start">
+    <span class="taskbar-start-icon">🪟</span> Start
+  </button>
+  <div class="taskbar-divider"></div>
+  <button class="taskbar-btn" onclick="location.href='index.html'">🏠 404 Punks Lab — Whitelist</button>
+  <button class="taskbar-btn inactive" onclick="location.href='check.html'">🔍 Check Status</button>
+  <div class="taskbar-clock" id="taskbarClock">12:00</div>
+</div>
+
+<!-- DESKTOP ICONS -->
+<div class="desktop-icons">
+  <div class="desktop-icon" onclick="location.href='check.html'">
+    <div class="di-img">🔍</div>
+    <div class="di-label">Check Status</div>
+  </div>
+  <div class="desktop-icon" onclick="location.href='admin.html'">
+    <div class="di-img">⚙️</div>
+    <div class="di-label">Admin Panel</div>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- NAVBAR WINDOW -->
+  <div class="win-window win-navbar">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">
+        <span class="win-titlebar-icon">🤖</span>
+        <span>404 Punks Lab — Whitelist Portal v1.0</span>
+      </div>
+      <div class="win-titlebar-btns">
+        <button class="win-titlebar-btn">_</button>
+        <button class="win-titlebar-btn">□</button>
+        <button class="win-titlebar-btn">✕</button>
+      </div>
+    </div>
+    <div class="win-body nav-content">
+      <span class="nav-logo-text">🤖 404 PUNKS LAB</span>
+      <div class="nav-links">
+        <button class="win-btn" onclick="location.href='check.html'">🔍 Check Status</button>
+        <button class="win-btn" onclick="openModal()">📋 Join Whitelist</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO WINDOW -->
+  <div class="win-window hero-window">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">
+        <span class="win-titlebar-icon">🤖</span>
+        <span>Welcome — 404 Punks Lab</span>
+      </div>
+      <div class="win-titlebar-btns">
+        <button class="win-titlebar-btn">_</button>
+        <button class="win-titlebar-btn">□</button>
+        <button class="win-titlebar-btn">✕</button>
+      </div>
+    </div>
+    <div class="win-body hero-content">
+      <div class="hero-logo">
+        C:\&gt; 404_PUNKS_LAB.EXE
+      </div>
+      <div class="hero-subtitle">Whitelist Registration Portal</div>
+
+      <div class="hero-notice">
+        <strong>⚠ IMPORTANT NOTICE:</strong><br>
+        Purchasing 404 PUNKs now will NOT be counted for whitelist eligibility.<br>
+        All submissions are manually reviewed. Fake information will result in permanent rejection.<br>
+        Once rejected, you will not receive any role.
+      </div>
+
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--win-darker);margin:8px 0;">
+        Complete all required tasks below to secure your whitelist spot.<br>
+        Submissions are verified manually — providing false information will result in permanent rejection.
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-box">
+          <span class="stat-num" id="totalCount">—</span>
+          <span class="stat-label">Registered</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="pendingCount">—</span>
+          <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="approvedCount">—</span>
+          <span class="stat-label">Approved</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">5</span>
+          <span class="stat-label">Roles</span>
+        </div>
+      </div>
+
+      <button class="win-btn win-btn-primary win-btn-large" onclick="openModal()">
+        📋 JOIN WHITELIST
+      </button>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD WINDOW -->
+  <div class="win-window lb-window">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">
+        <span>🏆 Top 100 Leaderboard</span>
+      </div>
+      <div class="win-titlebar-btns">
+        <button class="win-titlebar-btn">_</button>
+        <button class="win-titlebar-btn">□</button>
+      </div>
+    </div>
+    <div class="win-body">
+      <div class="lb-tabs">
+        <button class="lb-tab active" id="lbTabHolders" onclick="switchLb('holders')">🏆 Top NFT Holders</button>
+        <button class="lb-tab" id="lbTabReferrals" onclick="switchLb('referrals')">👥 Top Referrers</button>
+      </div>
+
+      <!-- HOLDERS TABLE -->
+      <div id="lbHoldersPanel">
+        <div id="lbHoldersBody">
+          <div style="text-align:center;padding:16px;font-family:var(--font-mono);color:var(--win-darker);">Loading...</div>
+        </div>
+      </div>
+
+      <!-- REFERRALS TABLE -->
+      <div id="lbReferralsPanel" style="display:none;">
+        <div id="lbReferralsBody">
+          <div style="text-align:center;padding:16px;font-family:var(--font-mono);color:var(--win-darker);">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-wrapper -->
+
+<!-- ============================================================
+     WHITELIST MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="modalOverlay" style="display:none;">
+  <div class="modal-window">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">
+        <span>📋 Join Whitelist — 404 Punks Lab</span>
+      </div>
+      <div class="win-titlebar-btns">
+        <button class="win-titlebar-btn" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div class="win-body">
+
+      <!-- PROGRESS -->
+      <div class="win-progress-wrap">
+        <div class="win-progress-fill" id="progressFill"></div>
+        <div class="win-progress-text" id="progressText">0 / 7 tasks</div>
+      </div>
+
+      <div class="tasks-container">
+
+        <!-- TASK 1: Follow -->
+        <div class="task-card" id="task1">
+          <div class="task-header">
+            <div class="task-num">01</div>
+            <div class="task-info">
+              <h3>Follow on X</h3>
+              <p>Follow @404punklab on X (Twitter)</p>
+            </div>
+            <div class="task-check" id="check1">⬜</div>
+          </div>
+          <a href="https://x.com/404punklab" target="_blank" class="win-btn" onclick="markTask(1)">
+            🐦 Follow @404punklab
+          </a>
+        </div>
+
+        <!-- TASK 2: Like & Retweet -->
+        <div class="task-card" id="task2">
+          <div class="task-header">
+            <div class="task-num">02</div>
+            <div class="task-info">
+              <h3>Like &amp; Repost</h3>
+              <p>Like and repost the pinned post</p>
+            </div>
+            <div class="task-check" id="check2">⬜</div>
+          </div>
+          <a href="https://x.com/i/status/2066974527805092264" target="_blank" class="win-btn" onclick="markTask(2)">
+            ❤️ Like &amp; Repost
+          </a>
+        </div>
+
+        <!-- TASK 3: Twitter Username -->
+        <div class="task-card" id="task3">
+          <div class="task-header">
+            <div class="task-num">03</div>
+            <div class="task-info">
+              <h3>Twitter Username</h3>
+              <p>Your X handle (without @)</p>
+            </div>
+            <div class="task-check" id="check3">⬜</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:6px;">
+            <span style="font-family:var(--font-mono);font-size:14px;">@</span>
+            <input class="win-input" type="text" id="twitterInput" placeholder="yourhandle" oninput="handleTwitterInput()" style="flex:1;" />
+          </div>
+        </div>
+
+        <!-- TASK 4: NFT Holder Check -->
+        <div class="task-card" id="task4">
+          <div class="task-header">
+            <div class="task-num">04</div>
+            <div class="task-info">
+              <h3>NFT Holder Status</h3>
+              <p>Do you hold 404 Punks NFTs?</p>
+            </div>
+            <div class="task-check" id="check4">⬜</div>
+          </div>
+          <div class="win-checkbox-row" style="margin-top:6px;">
+            <input type="checkbox" id="isHolderCheck" onchange="handleHolderChange()" />
+            <label for="isHolderCheck">Yes, I am an NFT holder</label>
+          </div>
+          <div id="holderCountRow" class="hold-count-row" style="display:none;margin-top:6px;">
+            <span class="win-label" style="margin:0;white-space:nowrap;">How many NFTs held:</span>
+            <input class="win-input captcha-answer" type="number" id="holderCount" min="1" max="9999"
+              placeholder="e.g. 5" oninput="handleHolderCount()" />
+          </div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--win-darker);margin-top:4px;">
+            If not a holder, you will be marked as <strong>Non-Holder</strong>.
+          </div>
+        </div>
+
+        <!-- TASK 5: Wallet Connect -->
+        <div class="task-card" id="task5">
+          <div class="task-header">
+            <div class="task-num">05</div>
+            <div class="task-info">
+              <h3>Connect Wallet</h3>
+              <p>Sign message to verify ownership (all EVM wallets)</p>
+            </div>
+            <div class="task-check" id="check5">⬜</div>
+          </div>
+          <button class="win-btn" id="connectWalletBtn" onclick="connectWallet()">
+            🦊 Connect Wallet
+          </button>
+          <div class="wallet-connected-box" id="walletInfo" style="display:none;margin-top:6px;">
+            <div class="wallet-addr" id="walletAddr"></div>
+            <div class="wallet-sig" id="walletSig">✔ Signature verified</div>
+          </div>
+        </div>
+
+        <!-- TASK 6: Refer Friend (Optional) -->
+        <div class="task-card" id="task6">
+          <div class="task-header">
+            <div class="task-num">06</div>
+            <div class="task-info">
+              <h3>Refer a Friend <span style="font-size:9px;color:var(--win-dark);">(Optional)</span></h3>
+              <p>Enter a friend's X username who referred you</p>
+            </div>
+            <div class="task-check" id="check6">➖</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:6px;">
+            <span style="font-family:var(--font-mono);font-size:14px;">@</span>
+            <input class="win-input" type="text" id="referInput" placeholder="friendshandle (optional)"
+              oninput="handleReferInput()" style="flex:1;" />
+          </div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--win-darker);margin-top:4px;">
+            Leave blank if no referral.
+          </div>
+        </div>
+
+        <!-- TASK 7: Math Captcha -->
+        <div class="task-card" id="task7">
+          <div class="task-header">
+            <div class="task-num">07</div>
+            <div class="task-info">
+              <h3>Math Captcha</h3>
+              <p>Solve the equation</p>
+            </div>
+            <div class="task-check" id="check7">⬜</div>
+          </div>
+          <div class="captcha-row">
+            <span class="captcha-eq" id="captchaEq">Loading...</span>
+            <span class="captcha-eq-sign">=</span>
+            <input class="win-input captcha-answer" type="number" id="captchaInput" placeholder="?" oninput="checkCaptcha()" />
+            <button class="win-btn" onclick="generateCaptcha()" title="New question">↻</button>
+          </div>
+        </div>
+
+        <!-- TASK 8: Cloudflare Turnstile -->
+        <div class="task-card" id="task8">
+          <div class="task-header">
+            <div class="task-num">08</div>
+            <div class="task-info">
+              <h3>Security Check</h3>
+              <p>Complete Cloudflare verification</p>
+            </div>
+            <div class="task-check" id="check8">⬜</div>
+          </div>
+          <div id="turnstile-widget" style="margin-top:6px;"></div>
+        </div>
+
+      </div><!-- end tasks -->
+
+      <div class="win-sep"></div>
+
+      <!-- STATUS MSG -->
+      <div id="statusMsg"></div>
+
+      <!-- SUBMIT -->
+      <button class="win-btn win-btn-primary win-btn-large" id="submitBtn" onclick="submitWhitelist()">
+        <span id="submitText">📋 JOIN WHITELIST</span>
+        <span class="win-spinner" id="submitSpinner" style="display:none;"></span>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="modal-overlay" id="successOverlay" style="display:none;">
+  <div class="modal-window" style="max-width:380px;">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">
+        <span>✅ Success!</span>
+      </div>
+    </div>
+    <div class="win-body" style="text-align:center;padding:20px;">
+      <div style="font-size:48px;margin-bottom:12px;">✅</div>
+      <div class="win-alert success">
+        <span class="win-alert-icon">✅</span>
+        <span><strong>You are on the list!</strong><br>Your application is pending review. Check your status anytime.</span>
+      </div>
+      <br>
+      <button class="win-btn win-btn-primary" onclick="location.href='check.html'">🔍 Check My Status</button>
+      <button class="win-btn" onclick="document.getElementById('successOverlay').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script type="module" src="js/firebase.js"></script>
+<script src="js/captcha.js"></script>
+<script src="js/wallet.js"></script>
+<script src="js/app.js"></script>
+<script src="js/leaderboard.js"></script>
+
+</body>
+</html>
