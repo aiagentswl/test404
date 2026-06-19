@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Status — 404 Punks Lab</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="taskbar">
+  <button class="taskbar-start"><span class="taskbar-start-icon">🪟</span> Start</button>
+  <div class="taskbar-divider"></div>
+  <button class="taskbar-btn inactive" onclick="location.href='index.html'">🏠 Home</button>
+  <button class="taskbar-btn" onclick="location.href='check.html'">🔍 Check Status</button>
+  <div class="taskbar-clock" id="taskbarClock">12:00</div>
+</div>
+
+<div class="page-wrapper">
+
+  <div class="win-window" style="width:100%;max-width:560px;">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">
+        <span class="win-titlebar-icon">🔍</span>
+        <span>Check Whitelist Status — 404 Punks Lab</span>
+      </div>
+      <div class="win-titlebar-btns">
+        <button class="win-titlebar-btn">_</button>
+        <button class="win-titlebar-btn">□</button>
+        <button class="win-titlebar-btn" onclick="location.href='index.html'">✕</button>
+      </div>
+    </div>
+    <div class="win-body">
+      <div style="font-family:var(--font-mono);font-size:12px;margin-bottom:10px;color:var(--win-darker);">
+        Enter your wallet address <strong>or</strong> Twitter username to look up your status.
+      </div>
+
+      <!-- TABS -->
+      <div class="lb-tabs">
+        <button class="lb-tab active" id="tabWallet"  onclick="switchTab('wallet')">💼 Wallet Address</button>
+        <button class="lb-tab"        id="tabTwitter" onclick="switchTab('twitter')">🐦 Twitter Username</button>
+      </div>
+
+      <div id="walletTabContent">
+        <div class="win-field">
+          <label class="win-label">Wallet Address (0x...)</label>
+          <input class="win-input" type="text" id="walletSearch" placeholder="0x..." />
+        </div>
+      </div>
+
+      <div id="twitterTabContent" style="display:none;">
+        <div class="win-field">
+          <label class="win-label">Twitter Username (without @)</label>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-family:var(--font-mono);font-size:14px;">@</span>
+            <input class="win-input" type="text" id="twitterSearch" placeholder="yourhandle" style="flex:1;" />
+          </div>
+        </div>
+      </div>
+
+      <button class="win-btn win-btn-primary" style="width:100%;justify-content:center;" onclick="checkStatus()">
+        🔍 Check Status
+      </button>
+
+      <div id="checkMsg" style="margin-top:8px;"></div>
+
+      <!-- RESULT -->
+      <div id="statusResult" style="display:none;margin-top:10px;">
+        <div id="resultCard" class="result-pending">
+          <div class="result-status" id="resultStatus"></div>
+          <div style="font-family:var(--font-mono);font-size:12px;">
+            <div id="resultTwitter"></div>
+            <div id="resultWallet"></div>
+            <div id="resultDate"></div>
+          </div>
+          <div class="result-roles" id="resultRoles" style="margin-top:6px;"></div>
+          <div id="resultHolder" style="font-family:var(--font-mono);font-size:11px;margin-top:4px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="js/check.js"></script>
+<script>
+  // Clock
+  function updateClock(){
+    const n=new Date();
+    document.getElementById('taskbarClock').textContent=
+      n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+  }
+  setInterval(updateClock,1000); updateClock();
+</script>
+</body>
+</html>
